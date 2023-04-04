@@ -1,6 +1,6 @@
 // Storage controller
 const StorageCtrl = (function (){
-    // publick methods
+    // public methods
     return {
         storeItem: function (item){
             let items;
@@ -48,6 +48,7 @@ const ItemCtrl = (function(){
             // {id:2, name:"eg", calories: 300}
         ],
         total: 0,
+        currentItem: null
     }
 
     return{
@@ -89,6 +90,8 @@ const UICtrl = (function(){
         itemCaloriesInput: "#item-calories",
         addBtn: ".add-btn",
         totalCalories: ".total-calories",
+        updateBtn:  ".update-btn",
+        deleteBtn: ".delete-btn"
     }
     return {
         populateItemList: function(items){
@@ -134,6 +137,9 @@ const App = (function(ItemCtrl,StorageCtrl,UICtrl){
     const loadEventListeners = function(){
         const UISelectors = UICtrl.getSelectors()
         document.querySelector(UISelectors.addBtn).addEventListener("click", itemAddSubmit);
+        document.querySelector('ul').addEventListener("click", updatemeal);
+        document.querySelector(UISelectors.updateBtn).addEventListener("click", mealupdate);
+
         // add document reload event
         document.addEventListener('DOMContentLoaded', getItemsFromStorage)
     }
@@ -142,7 +148,6 @@ const App = (function(ItemCtrl,StorageCtrl,UICtrl){
         const input = UICtrl.getItemInput()
         if (input.name !== '' && input.calories !== '') {
             const newItem = ItemCtrl.addItem(input.name, input.calories)
-            console.log(newItem)
             UICtrl.addListItem(newItem)
             // get total calories to UI
             const totalCalories = ItemCtrl.getTotalCalories()
@@ -152,9 +157,29 @@ const App = (function(ItemCtrl,StorageCtrl,UICtrl){
             StorageCtrl.storeItem(newItem);
             // clear fields
             UICtrl.clearInput()
+            event.preventDefault()
         }
-        event.preventDefault()
     }
+        const updatemeal = function (event){
+                if(event.target.className === 'edit-item fa fa-pencil'){
+                const UIselector = UICtrl.getSelectors()
+                document.querySelector(UIselector.updateBtn).style.display = 'inline'
+                document.querySelector(UIselector.deleteBtn).style.display = 'inline'
+                document.querySelector(UIselector.addBtn).style.display = 'none'
+            }
+        }
+        // meal update
+    const mealupdate = function (event){
+        const input = UICtrl.getItemInput()
+        const UIselector = UICtrl.getSelectors()
+        const newItem = ItemCtrl.addItem(input.name, input.calories)
+        if (input.name !== '' && input.calories !== ''){
+
+        }
+
+
+  }
+
         // get items from storage
     const getItemsFromStorage = function (){
         // get items from storage
